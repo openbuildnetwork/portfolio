@@ -1,4 +1,4 @@
-# portfolio
+# Open Build Network (OBN)
 
 This repository is the portfolio site of OBN (Open Build Network).
 
