@@ -1,5 +1,9 @@
+import { useState, useEffect, useLayoutEffect } from "react";
+import { createPortal } from "react-dom";
 import type { CSSProperties } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+
+const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 import {
   ArrowUpRight,
   Code2,
@@ -9,6 +13,7 @@ import {
   ShieldCheck,
   Sparkles,
   UsersRound,
+  X,
 } from "lucide-react";
 
 type TeamMember = {
@@ -28,7 +33,7 @@ const teamMembers: TeamMember[] = [
     designation: "Founder & Software Engineer",
     image: "founders/donbenny.webp",
     linkedin: "https://www.linkedin.com/in/donbenny/",
-    focus: "Vision, roadmap, and product direction & AI Development",
+    focus: "Spearheaded the core vision, roadmap, and product direction for OpenBuild Network. Engineered foundational architecture and integrated advanced AI capabilities to drive innovation across the platform.",
     accent: "rgba(45, 212, 191, 0.34)",
   },
   {
@@ -36,7 +41,7 @@ const teamMembers: TeamMember[] = [
     designation: "Co-founder & Software Engineer",
     image: "founders/naveenj.webp",
     linkedin: "https://www.linkedin.com/in/naveenjpanachinanickal/",
-    focus: "Scalable web tooling and platform quality",
+    focus: "Architected scalable web tooling and maintained rigorous platform quality standards. Led the development of high-performance frontend interfaces and optimized application infrastructure for maximum reliability.",
     accent: "rgba(96, 165, 250, 0.34)",
   },
   {
@@ -44,7 +49,7 @@ const teamMembers: TeamMember[] = [
     designation: "Co-founder & Software Engineer",
     image: "founders/romeoroshan.webp",
     linkedin: "https://www.linkedin.com/in/romeo-roshan-361097321/",
-    focus: "Privacy-first architecture, Frontend & AI Development",
+    focus: "Championed privacy-first software architecture and advanced frontend UI development. Integrated complex AI models into user-facing applications while ensuring data security and intuitive user experiences.",
     accent: "rgba(52, 211, 153, 0.34)",
   },
   {
@@ -52,7 +57,7 @@ const teamMembers: TeamMember[] = [
     designation: "Co-founder & Software Tester",
     image: "founders/ashinsteephan.webp",
     linkedin: "https://www.linkedin.com/in/ashinsteephan/",
-    focus: "Quality Assurance & Content Validation",
+    focus: "Directed Quality Assurance operations and content validation protocols. Implemented comprehensive testing frameworks to identify edge cases, ensuring robust application stability and flawless end-user experiences.",
     accent: "rgba(251, 113, 133, 0.32)",
   },
   {
@@ -60,7 +65,7 @@ const teamMembers: TeamMember[] = [
     designation: "Co-Founder & Devops Engineer",
     image: "founders/ronybinoy.webp",
     linkedin: "https://www.linkedin.com/in/rony-binoy/",
-    focus: "CI/CD pipelines & Cloud Infrastructure",
+    focus: "Led development operations and deployment workflows for OpenBuild Network projects, including CI/CD setup, cloud deployment automation, dependency modernization, and platform stability improvements.",
     accent: "rgba(251, 191, 36, 0.32)",
   },
   {
@@ -68,7 +73,7 @@ const teamMembers: TeamMember[] = [
     designation: "Co-Founder & Software Developer",
     image: "founders/fableklonappan.webp",
     linkedin: "https://www.linkedin.com/in/fableklonappan/",
-    focus: "Fast, accessible, expressive user experiences",
+    focus: "Focused on delivering fast, highly accessible, and visually expressive user experiences. Translated complex design system requirements into maintainable, responsive, and cross-browser compatible frontend components.",
     accent: "rgba(34, 211, 238, 0.34)",
   },
   {
@@ -76,7 +81,7 @@ const teamMembers: TeamMember[] = [
     designation: "Co-Founder & Software Developer",
     image: "founders/tonyksebastian.webp",
     linkedin: "https://www.linkedin.com/in/tonyk-sebastian/",
-    focus: "Privacy-first architecture, infrastructure & Tool Development",
+    focus: "Engineered scalable backend infrastructure and robust internal tooling. Prioritized privacy-first architectural decisions to safeguard user data while enhancing the overall performance of OpenBuild Network services.",
     accent: "rgba(129, 140, 248, 0.34)",
   },
   {
@@ -84,7 +89,7 @@ const teamMembers: TeamMember[] = [
     designation: "Co - Founder & Software Developer",
     image: "founders/midhunkrishnan.webp",
     linkedin: "https://www.linkedin.com/in/midhun-krishnan/",
-    focus: "Clear documentation and pipeline development",
+    focus: "Managed comprehensive technical documentation and data pipeline development. Streamlined internal developer onboarding and maintained clear architectural guidelines to accelerate cross-team collaboration.",
     accent: "rgba(244, 114, 182, 0.32)",
   },
   {
@@ -92,7 +97,7 @@ const teamMembers: TeamMember[] = [
     designation: "Co - Founder & Software Developer",
     image: "founders/albertdevasia.webp",
     linkedin: "https://www.linkedin.com/in/albert-devasia/",
-    focus: "privacy-first development",
+    focus: "Dedicated to privacy-first application development and secure coding practices. Ensured all OpenBuild Network projects complied with strict security standards while contributing to core platform features.",
     accent: "rgba(74, 222, 128, 0.34)",
   },
 ];
@@ -104,6 +109,28 @@ const principles = [
 ];
 
 const AboutTeamSection = () => {
+  const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useIsomorphicLayoutEffect(() => {
+    if (selectedMember) {
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      document.body.style.overflow = "hidden";
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    } else {
+      document.body.style.overflow = "unset";
+      document.body.style.paddingRight = "0px";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+      document.body.style.paddingRight = "0px";
+    };
+  }, [selectedMember]);
+
   return (
     <section id="about-us" className="relative overflow-hidden bg-transparent py-32 md:py-44">
       <div className="absolute left-1/2 top-24 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-cyan-400/5 blur-[130px]" />
@@ -160,13 +187,11 @@ const AboutTeamSection = () => {
           >
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {teamMembers.map((member, index) => (
-                <motion.a
+                <motion.button
                   key={`${member.name}-${member.designation}`}
-                  href={member.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`Open LinkedIn profile for ${member.name}`}
-                  className="group relative flex flex-col justify-between min-h-[410px] overflow-hidden rounded-[12px] border border-white/10 bg-[#0B0B0F]/90 p-4 text-left shadow-2xl outline-none ring-1 ring-white/[0.03] transition-all duration-300 hover:border-white/25 focus-visible:border-cyan-300/60 focus-visible:ring-2 focus-visible:ring-cyan-300/40"
+                  onClick={() => setSelectedMember(member)}
+                  aria-label={`View details for ${member.name}`}
+                  className="group relative flex flex-col justify-between min-h-[410px] overflow-hidden rounded-[12px] border border-white/10 bg-[#0B0B0F]/90 p-4 text-left shadow-2xl outline-none ring-1 ring-white/[0.03] transition-all duration-300 hover:border-white/25 focus-visible:border-cyan-300/60 focus-visible:ring-2 focus-visible:ring-cyan-300/40 w-full"
                   style={{ "--member-accent": member.accent } as CSSProperties}
                   initial={{ opacity: 0, y: 24 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -181,38 +206,41 @@ const AboutTeamSection = () => {
                   />
                   <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(115deg,transparent_0%,rgba(255,255,255,0.08)_42%,transparent_58%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
-                  <div className="relative z-10 flex flex-1 flex-col justify-between">
+                  <div className="relative z-10 flex flex-1 flex-col justify-between w-full">
                     <div className="flex flex-col flex-1">
-                      <div className="relative aspect-[4/5] overflow-hidden rounded-[8px] bg-white/5 transform-gpu backface-hidden">
+                      
+                      {/* Image Container */}
+                      <div className="relative aspect-[4/5] overflow-hidden rounded-[8px] bg-white/5">
                         <img
                           src={member.image}
                           alt={`${member.name}, ${member.designation}`}
-                          className="h-full w-full object-cover grayscale-[18%] transition duration-700 group-hover:scale-105 group-hover:grayscale-0 transform-gpu backface-hidden will-change-transform"
+                          className="h-full w-full object-cover object-top grayscale-[18%] transition duration-700 group-hover:scale-105 group-hover:grayscale-0 will-change-transform"
                           style={{ imageRendering: "-webkit-optimize-contrast" }}
                           loading="lazy"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/8 to-transparent" />
-                        <div className="absolute left-3 top-3 flex h-8 w-8 items-center justify-center rounded-[8px] border border-white/15 bg-black/42 text-white/78 backdrop-blur-md transition-colors group-hover:text-cyan-200">
-                          <Linkedin className="h-4 w-4" />
-                        </div>
                       </div>
 
+                      {/* Name & Designation */}
                       <div className="flex flex-1 flex-col pt-4 pb-2">
                         <div className="flex items-start justify-between gap-3">
                           <div>
                             <h3 className="text-lg font-bold leading-snug tracking-tight text-white group-hover:text-cyan-300 transition-colors duration-300">
                               {member.name}
                             </h3>
-                            <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-400/80">
-                              {member.designation}
-                            </p>
+                             <div className="mt-1.5 flex flex-col gap-0.5 text-left">
+                               <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-400/90">
+                                 {member.designation.split("&")[0].trim()}
+                               </span>
+                               {member.designation.includes("&") && (
+                                 <span className="text-[9px] font-medium uppercase tracking-[0.15em] text-white/50 group-hover:text-white/70 transition-colors">
+                                   {member.designation.split("&")[1].trim()}
+                                 </span>
+                               )}
+                             </div>
                           </div>
                           <ArrowUpRight className="mt-1 h-4 w-4 shrink-0 text-white/35 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-white" />
                         </div>
-
-                        <p className="mt-3 text-sm font-normal leading-relaxed text-white/60 group-hover:text-white/80 transition-colors duration-300">
-                          {member.focus}
-                        </p>
                       </div>
                     </div>
 
@@ -222,7 +250,7 @@ const AboutTeamSection = () => {
                       </div>
                     </div>
                   </div>
-                </motion.a>
+                </motion.button>
               ))}
             </div>
           </motion.div>
@@ -249,6 +277,103 @@ const AboutTeamSection = () => {
           </div>
         </motion.div>
       </div>
+
+      {/* Interactive Side Drawer Modal (Rendered in Portal to escape parent CSS transforms/perspective) */}
+      {isMounted && typeof document !== "undefined" && createPortal(
+        <AnimatePresence>
+          {selectedMember && (
+            <>
+              {/* Dark Backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setSelectedMember(null)}
+                className="fixed inset-0 z-[100] bg-black/75"
+              />
+              
+              {/* Drawer Panel */}
+              <motion.div
+                initial={{ x: "100%" }}
+                animate={{ x: 0 }}
+                exit={{ x: "100%" }}
+                transition={{ type: "spring", damping: 26, stiffness: 220 }}
+                className="fixed right-0 top-0 bottom-0 z-[101] w-full max-w-md bg-[#0B0B0F]/95 border-l border-white/10 shadow-2xl overflow-y-auto transform-gpu"
+                style={{ willChange: "transform" } as CSSProperties}
+              >
+                {/* Close Button */}
+                <button
+                  onClick={() => setSelectedMember(null)}
+                  className="absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-black/50 border border-white/10 hover:bg-white/10 transition-colors text-white/70 hover:text-white backdrop-blur-md"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+
+                <div className="flex flex-col h-full">
+                  {/* Header Image Container with solid bg to prevent loading flash */}
+                  <div className="relative h-[360px] w-full shrink-0 bg-[#0C0C12]">
+                    <img
+                      src={selectedMember.image}
+                      alt={selectedMember.name}
+                      className="h-full w-full object-cover object-top grayscale-[10%]"
+                      style={{ imageRendering: "-webkit-optimize-contrast" }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0F] via-[#0B0B0F]/40 to-transparent" />
+                  </div>
+
+                  {/* Drawer Content */}
+                  <div className="relative z-10 -mt-24 flex flex-col flex-1 px-8 pb-8">
+                    <div>
+                      <h2 className="text-3xl font-extrabold tracking-tight text-white md:text-4xl">
+                        {selectedMember.name}
+                      </h2>
+                       <div className="mt-3.5 flex flex-col gap-1 text-left">
+                         <span className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-400">
+                           {selectedMember.designation.split("&")[0].trim()}
+                         </span>
+                         {selectedMember.designation.includes("&") && (
+                           <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/60">
+                             {selectedMember.designation.split("&")[1].trim()}
+                           </span>
+                         )}
+                       </div>
+                    </div>
+
+                    <div className="mt-12 flex-1">
+                      <div className="flex items-center gap-3 border-b border-white/10 pb-4">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/5 border border-white/10 text-cyan-300">
+                          <Code2 className="h-5 w-5" />
+                        </div>
+                        <h3 className="text-sm font-semibold text-white">Role & Focus</h3>
+                      </div>
+                      
+                      <p className="mt-6 text-base font-normal leading-relaxed text-white/70">
+                        {selectedMember.focus}
+                      </p>
+                    </div>
+
+                    {/* LinkedIn Button */}
+                    <div className="mt-12 pt-6 border-t border-white/10">
+                      <a
+                        href={selectedMember.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group flex w-full items-center justify-center gap-3 rounded-[8px] bg-white/5 py-4 text-sm font-semibold text-white hover:bg-white/10 transition-all border border-white/5 hover:border-white/20"
+                      >
+                        <Linkedin className="h-4 w-4 text-cyan-300" />
+                        Connect on LinkedIn
+                        <ArrowUpRight className="h-4 w-4 opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
+
     </section>
   );
 };
