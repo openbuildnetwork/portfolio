@@ -5,7 +5,7 @@ const Footer = () => {
   const socials = [
     { Icon: Github, href: "https://github.com/openbuildnetwork/" },
     { Icon: Linkedin, href: "https://www.linkedin.com/company/openbuildnetwork/" },
-    { Icon: Mail, href: "mailto:openbuildnetworkglobal@gmail.com" }
+    { Icon: Mail, href: "mailto:support@openbuildnetwork.com" }
   ];
 
   return (
@@ -28,10 +28,10 @@ const Footer = () => {
               <li><a href="#mission" className="hover:text-white transition-colors">Mission</a></li>
               <li><a href="#projects" className="hover:text-white transition-colors">Projects</a></li>
               <li>
-                <a 
-                  href="https://github.com/openbuildnetwork/" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
+                <a
+                  href="https://github.com/openbuildnetwork/"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="hover:text-white transition-colors"
                 >
                   GitHub
