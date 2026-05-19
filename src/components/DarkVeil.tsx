@@ -135,6 +135,12 @@ export default function DarkVeil({
     let frame = 0;
 
     const loop = () => {
+      // Pause WebGL rendering when body scroll is locked (e.g. side drawer modal is open)
+      if (document.body.style.overflow === "hidden") {
+        frame = requestAnimationFrame(loop);
+        return;
+      }
+
       program.uniforms.uTime.value = ((performance.now() - start) / 1000) * speed;
       program.uniforms.uHueShift.value = hueShift;
       program.uniforms.uNoise.value = noiseIntensity;

@@ -288,6 +288,7 @@ const AboutTeamSection = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
+                transition={{ duration: 0.25, ease: "easeOut" }}
                 onClick={() => setSelectedMember(null)}
                 className="fixed inset-0 z-[100] bg-black/75"
               />
@@ -297,7 +298,7 @@ const AboutTeamSection = () => {
                 initial={{ x: "100%" }}
                 animate={{ x: 0 }}
                 exit={{ x: "100%" }}
-                transition={{ type: "spring", damping: 26, stiffness: 220 }}
+                transition={{ type: "tween", ease: "easeOut", duration: 0.32 }}
                 className="fixed right-0 top-0 bottom-0 z-[101] w-full max-w-md bg-[#0B0B0F]/95 border-l border-white/10 shadow-2xl overflow-y-auto transform-gpu"
                 style={{ willChange: "transform" } as CSSProperties}
               >

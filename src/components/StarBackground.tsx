@@ -68,6 +68,12 @@ const StarBackground = () => {
 
     // Render Animation Loop
     const render = () => {
+      // Pause drawing when body scroll is locked (e.g. side drawer modal is open)
+      if (document.body.style.overflow === "hidden") {
+        animationId = requestAnimationFrame(render);
+        return;
+      }
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       const mx = mouseRef.current.x;

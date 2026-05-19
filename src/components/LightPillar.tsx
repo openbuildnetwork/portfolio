@@ -276,6 +276,12 @@ const LightPillar: React.FC<LightPillarProps> = ({
     const animate = (currentTime: number) => {
       if (!materialRef.current || !rendererRef.current || !sceneRef.current || !cameraRef.current) return;
 
+      // Pause WebGL rendering when body scroll is locked (e.g. side drawer modal is open)
+      if (document.body.style.overflow === "hidden") {
+        rafRef.current = requestAnimationFrame(animate);
+        return;
+      }
+
       const deltaTime = currentTime - lastTime;
 
       if (deltaTime >= frameTime) {
