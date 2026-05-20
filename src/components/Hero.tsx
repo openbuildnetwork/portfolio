@@ -13,8 +13,6 @@ const Hero = () => {
   const [isMemberCountLoading, setIsMemberCountLoading] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const displayMemberCount =
-    memberCount !== null ? (memberCount > 12 ? memberCount : 12) : 12;
 
   // Fetch total registered member count from Supabase
   useEffect(() => {
@@ -141,7 +139,7 @@ const Hero = () => {
                       aria-hidden
                     />
                   ) : (
-                    displayMemberCount
+                    memberCount+12
                   )}
                 </span>
               </div>
