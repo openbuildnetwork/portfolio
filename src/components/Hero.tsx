@@ -10,11 +10,16 @@ import { motion } from "framer-motion";
 const Hero = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [memberCount, setMemberCount] = useState<number | null>(null);
+  const [isMemberCountLoading, setIsMemberCountLoading] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const displayMemberCount =
+    memberCount !== null ? (memberCount > 12 ? memberCount : 12) : 12;
 
   // Fetch total registered member count from Supabase
   useEffect(() => {
     const fetchMemberCount = async () => {
+      setIsMemberCountLoading(true);
       try {
         const { supabase, isSupabaseConfigured } = await import("@/lib/supabase");
         if (!isSupabaseConfigured()) return;
@@ -26,6 +31,8 @@ const Hero = () => {
         }
       } catch (err) {
         console.error("Failed to fetch member count:", err);
+      } finally {
+        setIsMemberCountLoading(false);
       }
     };
     fetchMemberCount();
@@ -128,8 +135,13 @@ const Hero = () => {
                 <span className="text-[9px] uppercase tracking-wider block text-white/20">ALLIANCE</span>
                 <span className="text-sm font-bold text-emerald-400 flex items-center gap-1">
                   <Users className="w-3.5 h-3.5 text-emerald-400" />
-                  {memberCount !== null ? memberCount : (
-                    <span className="w-6 h-3 rounded bg-white/5 animate-pulse" />
+                  {isMemberCountLoading ? (
+                    <span
+                      className="inline-block min-w-[1.25rem] h-3.5 rounded bg-white/10 animate-pulse"
+                      aria-hidden
+                    />
+                  ) : (
+                    displayMemberCount
                   )}
                 </span>
               </div>
