@@ -26,6 +26,7 @@ const mockSupabase = {
         maybeSingle: async () => ({ data: null, error: null }),
       }),
     }),
+    insert: async () => ({ error: null }),
   }),
 };
 

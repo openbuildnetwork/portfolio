@@ -1,8 +1,8 @@
 import { useRef, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { 
-  Award, Key, CheckCircle, RefreshCw, 
+import {
+  Award, Key, CheckCircle, RefreshCw,
   Download, LogOut, Chrome, Sparkles
 } from "lucide-react";
 import { motion, AnimatePresence, useScroll, useTransform, useSpring, useMotionValue } from "framer-motion";
@@ -48,7 +48,7 @@ const CTASection = () => {
 
   // Base Dynamic Color configuration based on the selected guild
   const baseColor = selectedGuild === "builder" ? "#8B5CF6" :
-                    selectedGuild === "architect" ? "#EC4899" : "#10B981";
+    selectedGuild === "architect" ? "#EC4899" : "#10B981";
 
   // Auto-scroll to register portal if user becomes authenticated
   useEffect(() => {
@@ -67,20 +67,20 @@ const CTASection = () => {
     const initSupabaseAuth = async () => {
       try {
         const { supabase, isSupabaseConfigured } = await import("@/lib/supabase");
-        
+
         if (isSupabaseConfigured()) {
           setIsConfigError(false);
-          
+
           // Fetch initial session
           const { data: { session: activeSession } } = await supabase.auth.getSession();
           setSession(activeSession);
-          
+
           const currentUser = activeSession?.user ?? null;
           setUser(currentUser);
-          
+
           if (currentUser) {
             setAuthState("authenticated_handshake");
-            
+
             // Set a fallback handle based on metadata if not set
             const rawName = currentUser.user_metadata?.full_name || currentUser.email?.split("@")[0] || "";
             const cleanHandle = `@${rawName.toLowerCase().replace(/[^a-z0-9]/g, "")}`;
@@ -89,10 +89,10 @@ const CTASection = () => {
             // Check if there is a pending registration in localStorage
             const pendingGuild = localStorage.getItem("obn_pending_guild");
             const pendingHandle = localStorage.getItem("obn_pending_handle");
-            
+
             // Check if user is already in db
             const alreadyRegistered = await checkExistingMembership(currentUser.id);
-            
+
             if (!alreadyRegistered && pendingGuild && pendingHandle) {
               // Automatically execute the registry write and card compilation!
               await autoRegisterAlliance(currentUser, pendingGuild, pendingHandle);
@@ -104,19 +104,19 @@ const CTASection = () => {
             setSession(currentSession);
             const activeUser = currentSession?.user ?? null;
             setUser(activeUser);
-            
+
             if (activeUser) {
               setAuthState("authenticated_handshake");
-              
+
               const rawName = activeUser.user_metadata?.full_name || activeUser.email?.split("@")[0] || "";
               const cleanHandle = `@${rawName.toLowerCase().replace(/[^a-z0-9]/g, "")}`;
               setMemberHandle(prev => prev || cleanHandle);
 
               const pendingGuild = localStorage.getItem("obn_pending_guild");
               const pendingHandle = localStorage.getItem("obn_pending_handle");
-              
+
               const alreadyRegistered = await checkExistingMembership(activeUser.id);
-              
+
               if (!alreadyRegistered && pendingGuild && pendingHandle) {
                 await autoRegisterAlliance(activeUser, pendingGuild, pendingHandle);
               }
@@ -168,7 +168,7 @@ const CTASection = () => {
         setStagingStep("active");
         setSelectedGuild(
           data.guild.includes("Builder") ? "builder" :
-          data.guild.includes("Architect") ? "architect" : "guardian"
+            data.guild.includes("Architect") ? "architect" : "guardian"
         );
         // Clean up pending states
         localStorage.removeItem("obn_pending_guild");
@@ -192,7 +192,7 @@ const CTASection = () => {
 
     try {
       const { supabase } = await import("@/lib/supabase");
-      
+
       // Save pending registration states locally so we process automatically upon OAuth return
       localStorage.setItem("obn_pending_guild", selectedGuild);
       localStorage.setItem("obn_pending_handle", memberHandle.trim());
@@ -242,7 +242,7 @@ const CTASection = () => {
     const randomID = Math.random().toString(36).substring(2, 8).toUpperCase();
     const mockHash = `0x98f${Math.random().toString(16).substring(2, 6).toUpperCase()}...${Math.random().toString(16).substring(2, 6).toUpperCase()}`;
     const guildLabel = guild === "builder" ? "The Builder (Engineering)" :
-                       guild === "architect" ? "The Architect (UI/UX Design)" : "The Guardian (Advocacy)";
+      guild === "architect" ? "The Architect (UI/UX Design)" : "The Guardian (Advocacy)";
 
     const details = {
       name: currentUser.user_metadata?.full_name || currentUser.email?.split("@")[0] || handle.replace("@", ""),
@@ -271,8 +271,8 @@ const CTASection = () => {
 
       if (error) {
         setRegisterLogs(prev => [
-          ...prev, 
-          `❌ Database Error: ${error.message}`, 
+          ...prev,
+          `❌ Database Error: ${error.message}`,
           "⚠️ Please ensure you created the 'alliance_members' table inside Supabase.",
           "👉 Refer to C:\\Users\\donbe\\.gemini\\antigravity\\brain\\e6b7831d-3d9f-44f3-aead-0f1bec246fc0\\supabase_google_setup.md to initialize it."
         ]);
@@ -288,7 +288,7 @@ const CTASection = () => {
 
     setRegisterLogs(prev => [...prev, "✔ Sovereign Identity Registered successfully!"]);
     await new Promise(resolve => setTimeout(resolve, 400));
-    
+
     // Clear pending states
     localStorage.removeItem("obn_pending_guild");
     localStorage.removeItem("obn_pending_handle");
@@ -356,9 +356,9 @@ const CTASection = () => {
 
     // Neon Glow gradient centered on Left Column (concentric rings) to match holographic glow
     const mainColor = selectedGuild === "builder" ? "#8B5CF6" :
-                      selectedGuild === "architect" ? "#EC4899" : "#10B981";
+      selectedGuild === "architect" ? "#EC4899" : "#10B981";
     const accentColor = selectedGuild === "builder" ? "rgba(139, 92, 246, 0.2)" :
-                        selectedGuild === "architect" ? "rgba(236, 72, 153, 0.2)" : "rgba(16, 185, 129, 0.2)";
+      selectedGuild === "architect" ? "rgba(236, 72, 153, 0.2)" : "rgba(16, 185, 129, 0.2)";
 
     const radGrad = ctx.createRadialGradient(140, 150, 10, 140, 150, 320);
     radGrad.addColorStop(0, accentColor);
@@ -383,7 +383,7 @@ const CTASection = () => {
     ctx.strokeStyle = "rgba(255, 255, 255, 0.2)";
     ctx.lineWidth = 2;
     const bSz = 14;
-    
+
     // Top Left
     ctx.beginPath();
     ctx.moveTo(32, 32 + bSz); ctx.lineTo(32, 32); ctx.lineTo(32 + bSz, 32);
@@ -402,7 +402,7 @@ const CTASection = () => {
     ctx.stroke();
 
     // LEFT COLUMN ELEMENTS (Centered at X = 140)
-    
+
     // Concentric Avatar Circles on Left
     // Outer dashed ring
     ctx.strokeStyle = mainColor;
@@ -410,7 +410,7 @@ const CTASection = () => {
     ctx.globalAlpha = 0.45;
     ctx.setLineDash([4, 4]);
     ctx.beginPath(); ctx.arc(140, 150, 46, 0, Math.PI * 2); ctx.stroke();
-    
+
     // Inner dotted ring
     ctx.globalAlpha = 0.2;
     ctx.setLineDash([1, 4]);
@@ -460,7 +460,7 @@ const CTASection = () => {
     ctx.textAlign = "left"; // reset alignment
 
     // RIGHT COLUMN ELEMENTS (Starts X = 270)
-    
+
     // Corporate Registry Header
     ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
     ctx.font = "bold 8px monospace";
@@ -546,7 +546,7 @@ const CTASection = () => {
       {/* Immersive Background Space */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute inset-0 bg-transparent z-0" />
-        
+
         {/* Generative core glows */}
         <motion.div
           style={{ y: useTransform(scrollYProgress, [0, 1], [-120, 120]) }}
@@ -574,7 +574,7 @@ const CTASection = () => {
               <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
 
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                
+
                 {/* Left side: Community Invitation */}
                 <div className="col-span-1 lg:col-span-6 space-y-8 text-left relative z-10">
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/25">
@@ -595,10 +595,10 @@ const CTASection = () => {
 
                 {/* Right side: Interactive Member Staging Terminal */}
                 <div className="col-span-1 lg:col-span-6 w-full flex flex-col gap-6 relative z-10">
-                  
+
                   {/* Registry Frame Window */}
                   <div className="relative w-full bg-black/85 rounded-2xl border border-white/10 shadow-2xl p-6 font-mono text-[11px] overflow-hidden select-text text-left">
-                    
+
                     {/* Window Controls */}
                     <div className="flex items-center justify-between pb-4 border-b border-white/5 mb-6 text-[9px] uppercase tracking-wider text-white/30">
                       <div className="flex items-center gap-1.5">
@@ -608,13 +608,15 @@ const CTASection = () => {
                         <span className="ml-2 font-bold text-white/45">OBN_Member_Registry</span>
                       </div>
                       <span className="text-primary font-bold">SECURED PORTAL</span>
+
                     </div>
 
+
                     <AnimatePresence mode="wait">
-                      
+
                       {/* Configuration Error Message */}
                       {isConfigError ? (
-                        <motion.div 
+                        <motion.div
                           key="config_err"
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
@@ -630,7 +632,7 @@ const CTASection = () => {
                           </p>
                         </motion.div>
                       ) : stagingStep === "idle" && authState === "unauthenticated" ? (
-                        <motion.div 
+                        <motion.div
                           key="unauth_form"
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
@@ -640,7 +642,7 @@ const CTASection = () => {
                           {/* Choose Guild Path */}
                           <div className="space-y-3">
                             <span className="text-[9px] font-bold text-white/30 uppercase tracking-widest block">1. Choose Your Guild Path Placement</span>
-                            
+
                             <div className="grid grid-cols-3 gap-2">
                               {["builder", "architect", "guardian"].map(role => (
                                 <button
@@ -649,8 +651,8 @@ const CTASection = () => {
                                   onClick={() => setSelectedGuild(role)}
                                   className={cn(
                                     "py-2.5 px-2 rounded-xl border text-[9px] font-bold text-center uppercase tracking-wider transition-all",
-                                    selectedGuild === role 
-                                      ? "bg-primary border-primary text-white shadow-[0_0_15px_rgba(139,92,246,0.25)]" 
+                                    selectedGuild === role
+                                      ? "bg-primary border-primary text-white shadow-[0_0_15px_rgba(139,92,246,0.25)]"
                                       : "bg-white/[0.01] border-white/5 text-white/40 hover:text-white hover:border-white/10 hover:bg-white/[0.02]"
                                   )}
                                 >
@@ -674,7 +676,7 @@ const CTASection = () => {
                               />
                             </div>
 
-                            <Button 
+                            <Button
                               type="submit"
                               className="w-full h-11 rounded-xl bg-primary hover:bg-primary/95 text-white font-mono text-[10px] font-bold uppercase tracking-wider gap-2 shadow-[0_0_15px_rgba(139,92,246,0.3)] pt-0.5"
                             >
@@ -685,7 +687,7 @@ const CTASection = () => {
                         </motion.div>
                       ) : stagingStep === "idle" && authState === "authenticated_handshake" && !memberDetails ? (
                         /* Fallback Staging Area if user logged in but has no DB record and localStorage was empty */
-                        <motion.div 
+                        <motion.div
                           key="auth_unregistered"
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
@@ -711,8 +713,8 @@ const CTASection = () => {
                                   onClick={() => setSelectedGuild(role)}
                                   className={cn(
                                     "py-2.5 px-2 rounded-xl border text-[9px] font-bold text-center uppercase tracking-wider transition-all",
-                                    selectedGuild === role 
-                                      ? "bg-primary border-primary text-white shadow-[0_0_15px_rgba(139,92,246,0.25)]" 
+                                    selectedGuild === role
+                                      ? "bg-primary border-primary text-white shadow-[0_0_15px_rgba(139,92,246,0.25)]"
                                       : "bg-white/[0.01] border-white/5 text-white/40 hover:text-white hover:border-white/10 hover:bg-white/[0.02]"
                                   )}
                                 >
@@ -736,7 +738,7 @@ const CTASection = () => {
                             </div>
 
                             <div className="flex flex-col sm:flex-row gap-3">
-                              <Button 
+                              <Button
                                 type="submit"
                                 className="w-full h-11 rounded-xl bg-primary hover:bg-primary/95 text-white font-mono text-[10px] font-bold uppercase tracking-wider gap-2 shadow-[0_0_15px_rgba(139,92,246,0.3)] pt-0.5"
                               >
@@ -744,7 +746,7 @@ const CTASection = () => {
                                 Confirm Alliance Registration
                               </Button>
 
-                              <Button 
+                              <Button
                                 type="button"
                                 onClick={handleResetRegistration}
                                 variant="outline"
@@ -757,7 +759,7 @@ const CTASection = () => {
                           </form>
                         </motion.div>
                       ) : stagingStep === "registering" ? (
-                        <motion.div 
+                        <motion.div
                           key="sync"
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
@@ -767,17 +769,17 @@ const CTASection = () => {
                           {registerLogs.map((log, index) => (
                             <p key={index} className={cn(
                               "leading-relaxed",
-                              log.startsWith("✔") ? "text-emerald-400 font-semibold" : 
-                              log.startsWith("❌") ? "text-rose-400 font-semibold" : "text-white/60"
+                              log.startsWith("✔") ? "text-emerald-400 font-semibold" :
+                                log.startsWith("❌") ? "text-rose-400 font-semibold" : "text-white/60"
                             )}>
                               {log}
                             </p>
                           ))}
-                          
+
                           {/* If any log starts with "❌", show Return/Reset buttons, else show the active loading spin! */}
                           {registerLogs.some(log => log.startsWith("❌")) ? (
                             <div className="pt-4 flex flex-col gap-2">
-                              <Button 
+                              <Button
                                 onClick={() => {
                                   setStagingStep("idle");
                                   setRegisterLogs([]);
@@ -786,7 +788,7 @@ const CTASection = () => {
                               >
                                 Return to Staging Panel
                               </Button>
-                              <Button 
+                              <Button
                                 onClick={handleResetRegistration}
                                 variant="outline"
                                 className="h-9 rounded-lg border border-white/10 text-white hover:bg-white/5 font-mono text-[9px] uppercase tracking-wider"
@@ -802,7 +804,7 @@ const CTASection = () => {
                           )}
                         </motion.div>
                       ) : stagingStep === "active" && memberDetails ? (
-                        <motion.div 
+                        <motion.div
                           key="active"
                           initial={{ opacity: 0, scale: 0.95 }}
                           animate={{ opacity: 1, scale: 1 }}
@@ -810,7 +812,8 @@ const CTASection = () => {
                           className="space-y-5"
                         >
                           {/* Inject high-tech holographic animations */}
-                          <style dangerouslySetInnerHTML={{__html: `
+                          <style dangerouslySetInnerHTML={{
+                            __html: `
                             @keyframes obn-card-scan {
                               0%, 100% { top: 0%; opacity: 0.2; }
                               50% { top: 100%; opacity: 0.8; }
@@ -823,9 +826,9 @@ const CTASection = () => {
 
                           {/* Member Certificate Badge Grid - Cyber Holographic Badge design */}
                           <div className="relative w-full bg-gradient-to-b from-white/[0.07] to-white/[0.02] backdrop-blur-xl border border-white/10 rounded-2xl p-6 overflow-hidden shadow-[0_0_50px_rgba(255,255,255,0.02)] select-none">
-                            
+
                             {/* Dynamic Neon Glow Background */}
-                            <div 
+                            <div
                               className="absolute -inset-20 opacity-20 blur-[80px] pointer-events-none rounded-full"
                               style={{
                                 background: `radial-gradient(circle, ${baseColor} 0%, transparent 70%)`
@@ -842,7 +845,7 @@ const CTASection = () => {
                             <div className="absolute bottom-3 right-3 w-3.5 h-3.5 border-b-2 border-r-2 border-white/20" />
 
                             {/* Neon Laser Scanning Beam Overlay */}
-                            <div 
+                            <div
                               className="absolute left-0 w-full h-[2px] pointer-events-none"
                               style={{
                                 animation: "obn-card-scan 4s ease-in-out infinite",
@@ -852,18 +855,18 @@ const CTASection = () => {
 
                             {/* Card Content Grid */}
                             <div className="grid grid-cols-1 md:grid-cols-12 gap-6 relative z-10">
-                              
+
                               {/* Left Column: Cyber Avatar & Barcode */}
                               <div className="col-span-1 md:col-span-4 flex flex-col items-center justify-between border-b md:border-b-0 md:border-r border-white/10 pb-6 md:pb-0 md:pr-6">
-                                
+
                                 {/* High-tech Concentric Pulsing Ring Frame */}
                                 <div className="relative w-20 h-20 rounded-full flex items-center justify-center bg-black/50 border border-white/10 shadow-inner group">
-                                  <Award 
+                                  <Award
                                     className="w-10 h-10 transition-transform duration-500 group-hover:scale-110"
                                     style={{ color: baseColor }}
                                   />
                                   {/* Fast Concentric Outer Spinning Ring */}
-                                  <div 
+                                  <div
                                     className="absolute -inset-1.5 rounded-full border border-dashed opacity-45 animate-spin"
                                     style={{
                                       borderColor: baseColor,
@@ -871,7 +874,7 @@ const CTASection = () => {
                                     }}
                                   />
                                   {/* Slow Concentric Inner Spinning Ring */}
-                                  <div 
+                                  <div
                                     className="absolute -inset-3 rounded-full border border-dotted opacity-20"
                                     style={{
                                       borderColor: baseColor,
@@ -900,7 +903,7 @@ const CTASection = () => {
 
                               {/* Right Column: Identity metadata fields */}
                               <div className="col-span-1 md:col-span-8 space-y-4 text-left font-mono">
-                                
+
                                 {/* Corporate Registry Header */}
                                 <div className="flex justify-between items-center text-[8px] text-white/30 uppercase tracking-widest">
                                   <span>OPEN BUILD NETWORK</span>
@@ -960,7 +963,7 @@ const CTASection = () => {
                           </div>
 
                           <div className="flex flex-col sm:flex-row gap-3">
-                            <Button 
+                            <Button
                               onClick={handleDownloadCard}
                               className="w-full h-11 rounded-xl text-white font-mono text-[9px] uppercase tracking-wider gap-2 font-bold transition-all duration-300"
                               style={{
@@ -972,7 +975,7 @@ const CTASection = () => {
                               Download secure OBN ID Card
                             </Button>
 
-                            <Button 
+                            <Button
                               onClick={handleResetRegistration}
                               variant="outline"
                               className="w-full h-11 rounded-xl border border-white/10 text-white hover:bg-white/5 font-mono text-[9px] uppercase tracking-wider gap-2"

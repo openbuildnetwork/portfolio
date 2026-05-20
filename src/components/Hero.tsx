@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Github, Sparkles, Terminal, Activity, Heart, ShieldCheck } from "lucide-react";
+import { ArrowRight, Github, Sparkles, Terminal, Activity, Heart, ShieldCheck, Users } from "lucide-react";
 import Marquee from "./Marquee";
 import DarkVeil from "./DarkVeil";
 import LightPillar from "./LightPillar";
@@ -9,7 +9,39 @@ import { motion } from "framer-motion";
 
 const Hero = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [memberCount, setMemberCount] = useState<number | null>(null);
+  const [isMemberCountLoading, setIsMemberCountLoading] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const displayMemberCount =
+    memberCount !== null ? (memberCount > 12 ? memberCount : 12) : 12;
+
+  // Fetch total registered member count from Supabase
+  useEffect(() => {
+    const fetchMemberCount = async () => {
+      setIsMemberCountLoading(true);
+      try {
+        const { supabase, isSupabaseConfigured } = await import("@/lib/supabase");
+        if (!isSupabaseConfigured()) return;
+        const { count, error } = await supabase
+          .from("alliance_members")
+          .select("*", { count: "exact", head: true });
+        if (!error && count !== null) {
+          setMemberCount(count);
+        }
+      } catch (err) {
+        console.error("Failed to fetch member count:", err);
+      } finally {
+        setIsMemberCountLoading(false);
+      }
+    };
+    fetchMemberCount();
+
+    // Refresh count when a new member joins
+    const handleRefresh = () => fetchMemberCount();
+    window.addEventListener("obn_alliance_joined", handleRefresh);
+    return () => window.removeEventListener("obn_alliance_joined", handleRefresh);
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!containerRef.current) return;
@@ -58,13 +90,13 @@ const Hero = () => {
 
       {/* Hero Content Area */}
       <section className="relative z-10 w-full flex flex-col items-center justify-center pt-32 pb-16 px-4 flex-grow">
-        
+
         <div className="container max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16 md:gap-24 relative">
-          
+
           {/* Left Column: Breathtaking typography & values */}
           <div className="lg:w-1/2 flex flex-col items-start text-left space-y-8 animate-fade-up">
-            
-       
+
+
 
             {/* Futuristic Headline with Shiny gradient text */}
             <div className="space-y-4 max-w-xl">
@@ -77,14 +109,14 @@ const Hero = () => {
                 </span> of <br />
                 <ShinyText text="open collaboration." className="font-extrabold text-white" speed={3} />
               </h1>
-              
+
               <p className="text-base md:text-lg text-white/50 font-light leading-relaxed">
                 Join a decentralized, transparent platform where cutting-edge technology empowers individuals, respects total privacy, and stays permanently open to all.
               </p>
             </div>
 
             {/* Cybernetic Telemetry Data readout */}
-            <div className="grid grid-cols-2 gap-6 py-4 px-6 rounded-2xl bg-white/[0.02] border border-white/5 backdrop-blur-sm w-full max-w-xs font-mono text-[10px] text-white/40">
+            <div className="grid grid-cols-3 gap-6 py-4 px-6 rounded-2xl bg-white/[0.02] border border-white/5 backdrop-blur-sm w-full max-w-md font-mono text-[10px] text-white/40">
               <div className="space-y-1">
                 <span className="text-[9px] uppercase tracking-wider block text-white/20">LATENCY</span>
                 <span className="text-sm font-bold text-primary flex items-center gap-1">
@@ -99,18 +131,32 @@ const Hero = () => {
                   100%
                 </span>
               </div>
+              <div className="space-y-1 border-l border-white/5 pl-6">
+                <span className="text-[9px] uppercase tracking-wider block text-white/20">ALLIANCE</span>
+                <span className="text-sm font-bold text-emerald-400 flex items-center gap-1">
+                  <Users className="w-3.5 h-3.5 text-emerald-400" />
+                  {isMemberCountLoading ? (
+                    <span
+                      className="inline-block min-w-[1.25rem] h-3.5 rounded bg-white/10 animate-pulse"
+                      aria-hidden
+                    />
+                  ) : (
+                    displayMemberCount
+                  )}
+                </span>
+              </div>
             </div>
 
           </div>
 
           {/* Right Column: Mind-blowing Interactive Volumetric Hologram Core */}
           <div className="lg:w-1/2 w-full flex items-center justify-center pt-8 lg:pt-0">
-            
+
             <div className="relative w-[340px] h-[340px] md:w-[440px] md:h-[440px] flex items-center justify-center select-none">
-              
+
               {/* Telemetry Outer Rotator Ring */}
               <div className="absolute inset-0 rounded-full border border-dashed border-white/5 animate-spin-slow pointer-events-none" />
-              
+
               {/* Tech tick marks SVG ring */}
               <svg className="absolute inset-4 w-full h-full pointer-events-none transform -translate-x-4 -translate-y-4 opacity-25">
                 <circle cx="50%" cy="50%" r="44%" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5" strokeDasharray="1 8" fill="none" />
@@ -125,7 +171,7 @@ const Hero = () => {
 
               {/* Central Hologram Viewing Screen Dome */}
               <div className="absolute w-[240px] h-[240px] md:w-[320px] md:h-[320px] rounded-full overflow-hidden bg-black/60 border border-primary/20 shadow-[0_0_50px_rgba(139,92,246,0.15)] ring-1 ring-white/10 flex items-center justify-center group cursor-grab active:cursor-grabbing">
-                
+
                 {/* Embedded Volumetric LightPillar Shader */}
                 <LightPillar
                   topColor="#8B5CF6"
